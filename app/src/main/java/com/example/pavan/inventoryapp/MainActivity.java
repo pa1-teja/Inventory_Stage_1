@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity{
             InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_QUANTITY,
             InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
             InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
-            InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_PHONE
+            InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_PHONE,
+            InventoryContract.InventoryEntry.COLUMN_PRODUCT_IMAGE_PATH
     };
 
 
@@ -30,13 +31,14 @@ public class MainActivity extends AppCompatActivity{
     private String supplier_name = "Apple";
     private String supplier_email = "apple@apple.com";
     private String supplier_phone = "+1 (123) 456-7890";
+    private String productImagePath= "parent/child/img.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        insertProduct(productName,productPrice,quantity,supplier_name,supplier_email,supplier_phone);
+        insertProduct(productName,productPrice,quantity,supplier_name,supplier_email,supplier_phone,productImagePath);
         displayAllProducts(readAllProducts());
         displaySpecificProduct(readSpecificProduct(productName));
 
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity{
     private void displaySpecificProduct(Cursor cursor){
         if (cursor != null && cursor.getCount() >0)
         {
-            int _id,pro_name,pro_price,pro_quantity,pro_sup_name,pro_sup_email,pro_sup_phone;
+            int _id,pro_name,pro_price,pro_quantity,pro_sup_name,pro_sup_email,pro_sup_phone,pro_img_path;
             _id = cursor.getColumnIndex(projection[0]);
             pro_name = cursor.getColumnIndex(projection[1]);
             pro_price = cursor.getColumnIndex(projection[2]);
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity{
             pro_sup_name = cursor.getColumnIndex(projection[4]);
             pro_sup_email= cursor.getColumnIndex(projection[5]);
             pro_sup_phone= cursor.getColumnIndex(projection[6]);
+            pro_img_path= cursor.getColumnIndex(projection[7]);
 
             cursor.moveToFirst();
             Log.d(getClass().getName(),"Product Name_1: " + cursor.getString(pro_name));
@@ -88,7 +91,8 @@ public class MainActivity extends AppCompatActivity{
             Log.d(getClass().getName(),"Product Supplier Phone_1: " + cursor.getString(pro_sup_phone));
 
           int i =  updateSpecificProduct(_id,"IPhone",cursor.getLong(pro_price),cursor.getLong(pro_quantity),
-                    cursor.getString(pro_sup_name), cursor.getString(pro_sup_email), cursor.getString(pro_sup_phone));
+                    cursor.getString(pro_sup_name), cursor.getString(pro_sup_email), cursor.getString(pro_sup_phone),
+                  cursor.getString(pro_img_path));
 
           if (i >0){
               Log.d(getClass().getName(),"Update Successfull");
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private int updateSpecificProduct(int _id,String productName,long price,long quantity, String supplierName,
-                                      String supplierEmail, String supplierPhone){
+                                      String supplierEmail, String supplierPhone, String productImagePath){
 
         ContentValues values = new ContentValues();
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME,productName);
@@ -122,6 +126,7 @@ public class MainActivity extends AppCompatActivity{
         values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_NAME,supplierName);
         values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,supplierEmail);
         values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_PHONE,supplierPhone);
+        values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_IMAGE_PATH, productImagePath);
 
 
         return getContentResolver().update(InventoryContract.InventoryEntry.CONTENT_URI, values,
@@ -130,7 +135,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     private boolean insertProduct(String productName,long price,long quantity, String supplierName,
-                                  String supplierEmail, String supplierPhone) {
+                                  String supplierEmail, String supplierPhone, String productImagePath) {
 
 
             ContentValues values = new ContentValues();
@@ -140,6 +145,7 @@ public class MainActivity extends AppCompatActivity{
             values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_NAME,supplierName);
             values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,supplierEmail);
             values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER_PHONE,supplierPhone);
+            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_IMAGE_PATH,productImagePath);
 
             Uri newUri = getContentResolver().insert(InventoryContract.InventoryEntry.CONTENT_URI,values);
 

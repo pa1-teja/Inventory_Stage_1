@@ -39,6 +39,8 @@ public class InventoryContract {
         public static final String COLUMN_PRODUCT_SUPPLIER_EMAIL = "product_supplier_email";
 
         public static final String COLUMN_PRODUCT_SUPPLIER_PHONE = "product_supplier_phone";
+
+        public static final String COLUMN_PRODUCT_IMAGE_PATH = "product_image_path";
     }
 
 }
